@@ -2,33 +2,48 @@
 buildscript {
     // ext : build.gradle 에서 사용하는 전역변수를 설정하겠다는 의미
     ext {
-        springBootVersion = '2.1.7.RELEASE'
+        springBootVersion = '2.1.9.RELEASE'
     }
     repositories {
         mavenCentral()
         jcenter()
     }
     dependencies {
-        // 스프링부트 그레이들 플러그인의 2.1.7.RELEASE를 의존성으로 받겠다는 뜻
+        // 스프링부트 그레이들 플러그인의 2.1.9.RELEASE를 의존성으로 받겠다는 뜻
         classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
     }
 }
 
-
-
-plugins {
-    id 'java'
-}
+/* 앞서 선언한 플러그인 의존성들을 적용할 것인지 결정
+ (io.spring.dependecy-management 플러그인은 스프링 부트의 의존성들을 관리해 주는 플러그인이라 꼭 추가해야함)
+ 이 4개의 플러그인들은 자바와 스프링 부트를 사용하기 위해서 필수 플러그인이라 꼭 추가해야한다.
+ */
+apply plugin : 'java'
+apply plugin : 'eclipse'
+apply plugin : 'org.springframework.boot'
+apply plugin : 'io.spring.dependency-management'
 
 group 'org.example'
 version '1.0-SNAPSHOT'
-
 sourceCompatibility = 1.8
 
+/* 각종 의존성 (라이브러리)들을 어떤 원격 저장소에서 받을지 정한다.
+ 기본적으로 mavenCentral 을 많이 사용했지만, 최근에는 라이브러리 업로드 난이도 때문에 jcenter를 많이 사용.
+ mavenCentral에 본인이 만든 라이브러리를 업로드하기 위해서는 많은 과정과 설정이 필요하지만,
+ jcenter는 라이브러리 업로드를 간단하게하고 jcenter에 라이브러리를 업로드하면 mavenCentral에도 업로드될 수 있도록 자동화가능.
+*/
 repositories {
     mavenCentral()
+    jcenter()
 }
 
+/* 프로젝트 개발에 필요한 의존성들을 선언하는 곳.
+ 특정 버전을 명시하면 안된다. 버전을 명시하지 않아야만 맨 위에 작성한
+ org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}
+ 의 버전을 따라가게 된다.
+*/
 dependencies {
+    compile('org.springframework.boot:spring-boot-starter-web')
+    testCompile('org.springframework.boot:spring-boot-starter-test')
     testCompile group: 'junit', name: 'junit', version: '4.12'
 }
